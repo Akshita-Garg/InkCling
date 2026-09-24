@@ -2,7 +2,7 @@
 
 **Your voice, in ink.** On-device dictation and refinement for Apple Silicon Macs.
 
-This repository contains the Mac app source and public website. The first [public beta](https://github.com/Akshita-Garg/InkCling/releases) is being prepared.
+This repository contains the Mac app source and public website. Download the [Mac public beta](https://github.com/Akshita-Garg/InkCling/releases/tag/inkcling-v1.0.0), or visit the [InkCling website](https://akshita-garg.github.io/InkCling/).
 
 ## Using the app
 
