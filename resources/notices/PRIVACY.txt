@@ -1,0 +1,23 @@
+InkCling — Privacy Notice
+Version: 2026-09-18
+
+Local processing
+By default, speech recognition and Gemma refinement run on your Mac. InkCling does not send dictation audio or text to an InkCling server. No account is required, and this version includes no app analytics or telemetry uploader.
+
+Local history and clipboard
+The application keeps recent raw transcripts and refined outputs in local history, under ~/Library/Application Support/InkCling. Clearing history removes the visible history entries but keeps the all-time word count. The history file is not separately encrypted by InkCling. macOS account permissions and your disk protection apply. Clipboard content may be accessible to other apps or synced through your own macOS clipboard settings. InkCling puts completed dictation on the clipboard to paste it and retains it there as a fallback.
+
+Microphone and Accessibility
+Microphone permission lets InkCling record when you start a dictation. Accessibility and, where requested, Automation permissions let it send the paste shortcut to your selected application. Audio is processed locally. Closing the main window can keep the app available in the background; choose Quit InkCling to stop it completely.
+
+Release diagnostics
+Packaged releases write operational timings, status, and errors under ~/Library/Logs/InkCling. Transcript, prompt, and output fields are redacted by default, and raw audio files are not saved by default. Logs are local; the app does not upload them automatically. Log files rotate on startup when they exceed 10 MB, retaining up to five older files. Review any diagnostics before sharing them because errors can contain file paths or other contextual information.
+
+Development and opt-in diagnostics
+Development builds keep detailed text diagnostics and WAV recordings for debugging. Explicit diagnostic environment settings can also enable this in a packaged build. Those files remain on the Mac until removed. The app does not automatically delete development recordings when you clear history.
+
+Optional network features
+Downloading the optional Cohere model contacts GitHub and its download infrastructure. Those services receive ordinary network request information, such as your IP address. The model is subsequently run locally. If you explicitly choose a cloud refinement provider, transcript text and refinement instructions are sent to that provider using your API key. Speech recognition remains local. Cloud providers have their own privacy policies and may charge for usage. API keys are stored in the application's local settings; InkCling does not provide a separate encrypted credential vault in this version.
+
+Removal and questions
+Use the app's history control to clear transcripts. For full local removal, quit InkCling, remove the application, and remove ~/Library/Application Support/InkCling and ~/Library/Logs/InkCling. This deletes settings, history, downloaded models, and diagnostics and cannot be undone without a backup. Your clipboard must be cleared separately. App support: https://github.com/Akshita-Garg/InkCling/issues. Do not post private recordings, transcripts, or keys publicly.

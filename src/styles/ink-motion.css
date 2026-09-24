@@ -1,0 +1,24 @@
+/* Living ink: the approved painted layers with an uneven capillary spread.
+   JS paints only during motion; CSS owns timing, pause and reduced motion. */
+@property --ic-ink-progress { syntax: '<number>'; inherits: false; initial-value: 1; }
+/* Blend the complete illustration with the paper beneath it. Blending only
+   the canvas inside an isolated scene leaves it looking like a pasted sticker. */
+.ic-ink-scene { position: relative; display: block; width: 100%; aspect-ratio: 1; isolation: isolate; mix-blend-mode: multiply; pointer-events: none; }
+.ic-ink-art { position: absolute; left: 0; top: 50%; width: 100%; aspect-ratio: 1; transform: translateY(-50%); filter: saturate(.85); opacity: .86; }
+.ic-ink-wash { position: absolute; inset: 0; display: block; --ic-ink-progress: 1; }
+.ic-ink-canvas { display: block; width: 100%; height: 100%; mix-blend-mode: multiply; }
+.ic-living-nib { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; transform-origin: 15.81% 82.43%; transform: translate(24.19%, -16.43%) scale(.60); }
+.hero-art .ic-ink-scene.hero-ink { filter: none; transform: none; }
+.hero .hero-art .hero-note { position: relative; right: auto; bottom: auto; justify-self: end; margin-top: 10px; }
+.ic-ink-scene[data-recording="true"] .ic-ink-wash { animation: ic-living-spread 6s ease-in-out infinite alternate; }
+.ic-ink-scene[data-paused="true"] .ic-ink-wash,
+.ic-ink-scene[data-ink-hidden="true"] .ic-ink-wash { animation-play-state: paused; }
+@keyframes ic-living-spread {
+  0%, 8% { --ic-ink-progress: 1; }
+  34% { --ic-ink-progress: .68; }
+  64% { --ic-ink-progress: .25; }
+  90%, 100% { --ic-ink-progress: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ic-ink-scene .ic-ink-wash { animation: none !important; --ic-ink-progress: 1; }
+}

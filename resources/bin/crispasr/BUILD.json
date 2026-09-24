@@ -1,0 +1,14 @@
+{
+  "version": "0.8.23",
+  "commit": "7d22deeca045f9c80020bf59e6a24564b1d66e5b",
+  "ggmlCommit": "bfe8ea228d8134d03641c9fcf233a9931f3730de",
+  "c2paAudioCommit": "e40329b83f16f67bb5ddc7bb13ae18de0a9376fc",
+  "minimumMacOS": "14.0",
+  "architecture": "arm64",
+  "sdk": "27.0",
+  "cmake": "3.31.6",
+  "metal": true,
+  "embeddedMetalSource": true,
+  "buildScript": "scripts/build-crispasr-mac.sh",
+  "sha256": "45b82185deee195f1416ab4e077c870fdf6cd15b39844a4576dfbaec6ae94aad"
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "file": "GEMMA_TERMS.txt",
+    "source": "https://ai.google.dev/gemma/terms",
+    "sha256": "017870b1da33a5b38911707a6075050ae76f2fd9e825454335226a6f675db751"
+  },
+  {
+    "file": "GEMMA_PROHIBITED_USE_POLICY.txt",
+    "source": "https://ai.google.dev/gemma/prohibited_use_policy",
+    "sha256": "2669f38f022f1dc81b00b8d3182272ab981262bb33b9c952c55cf06fd1235d4f"
+  },
+  {
+    "file": "CC_BY_4.0.txt",
+    "source": "https://creativecommons.org/licenses/by/4.0/legalcode.txt",
+    "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
+  },
+  {
+    "file": "WHISPER_LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/openai/whisper/v20250625/LICENSE",
+    "sha256": "b5d65a59060e68c4ff940e1eddfa6f94b2d68fdf58ed7f4dd57721c997e35e9d"
+  },
+  {
+    "file": "SHERPA_ONNX_LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/k2-fsa/sherpa-onnx/v1.13.2/LICENSE",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "file": "APACHE_2.0.txt",
+    "source": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "file": "CRISPASR_LICENSE.txt",
+    "source": "CrispASR v0.8.23 / 7d22deeca045f9c80020bf59e6a24564b1d66e5b / LICENSE",
+    "sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d"
+  },
+  {
+    "file": "CRISPASR_THIRD_PARTY_NOTICES.txt",
+    "source": "CrispASR v0.8.23 / 7d22deeca045f9c80020bf59e6a24564b1d66e5b / THIRD_PARTY_NOTICES.txt",
+    "sha256": "81600a91324d5a6c91c55d24b5ecf9856a18a3c5c45afef0881fc12828f5dc93"
+  },
+  {
+    "file": "GGML_LICENSE.txt",
+    "source": "CrispASR v0.8.23 / 7d22deeca045f9c80020bf59e6a24564b1d66e5b / ggml/LICENSE",
+    "sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d"
+  },
+  {
+    "file": "C2PA_AUDIO_LICENSE.txt",
+    "source": "CrispASR v0.8.23 / 7d22deeca045f9c80020bf59e6a24564b1d66e5b / third_party/c2pa-audio/LICENSE",
+    "sha256": "b86f835523f67e55423756bfa8f07c791bc8b1854f57c6290783e9ae2ae23d51"
+  }
+]

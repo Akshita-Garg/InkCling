@@ -1,0 +1,22 @@
+InkCling — Terms of Use
+Version: 2026-09-18
+
+Please read these terms before using InkCling. By selecting “Agree and continue”, you agree to these terms. If you do not agree, quit the application.
+
+1. The application
+InkCling is developed by Akshita Garg. It transcribes speech and optionally refines text. Recognition and refinement can make mistakes or change meaning. Review the output before relying on it or sending it to others. You are responsible for your recordings, permissions to process them, and use of the output.
+
+2. Software and third-party components
+The application software is provided under the MIT license included in INKCLING_LICENSE.txt. Third-party software and models remain subject to their respective licenses and notices in this folder; the application license does not replace those terms. No ownership of your recordings or generated text is claimed by InkCling.
+
+3. Gemma model restrictions
+InkCling includes Gemma 3 1B, provided under the complete Gemma Terms of Use in GEMMA_TERMS.txt (https://ai.google.dev/gemma/terms). Those terms, including Section 3.2, and the Gemma Prohibited Use Policy in GEMMA_PROHIBITED_USE_POLICY.txt (https://ai.google.dev/gemma/prohibited_use_policy), are incorporated into these terms by reference and apply to use and redistribution of Gemma or Model Derivatives through InkCling. You agree not to use Gemma or Model Derivatives for the restricted uses in that policy or in violation of applicable laws and regulations. You must comply with those restrictions and any applicable redistribution conditions. If you redistribute Gemma or a Model Derivative, provide recipients the required agreement, notices, and use restrictions. These restrictions govern the Gemma component, even where another bundled component has a different license.
+
+4. Optional services
+If you enable a cloud refinement provider with your own API key, your transcript and refinement instructions are sent directly to that provider. Its terms, data practices, charges, and availability apply. Model downloads require a network connection. The included PRIVACY.txt explains local storage and network activity.
+
+5. Warranty and liability
+The application and bundled models are provided as-is, without warranties to the extent permitted by applicable law. The warranty and liability provisions in their respective licenses apply. Nothing in these terms excludes rights or liabilities that cannot lawfully be excluded.
+
+6. Contact
+Report app issues at https://github.com/Akshita-Garg/InkCling/issues. Do not include private dictations, recordings, or API keys in a public issue.

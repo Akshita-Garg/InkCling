@@ -1,0 +1,48 @@
+InkCling includes third-party software and model weights governed by their
+own terms. This file identifies the principal bundled runtime components and
+models. It does not replace the applicable license texts.
+
+Gemma 3 1B instruction-tuned model
+Copyright Google LLC.
+License: Gemma Terms of Use
+Terms: https://ai.google.dev/gemma/terms
+Prohibited Use Policy: https://ai.google.dev/gemma/prohibited_use_policy
+Required redistribution notice: see GEMMA_NOTICE.txt.
+
+NVIDIA Parakeet TDT 0.6B v3 model
+Copyright NVIDIA Corporation.
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+Model card: https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3
+License: https://creativecommons.org/licenses/by/4.0/legalcode
+
+CrispASR
+Copyright (c) 2023-2026 The ggml authors.
+License: MIT
+Source: https://github.com/CrispStrobe/CrispASR
+
+sherpa-onnx runtime
+Copyright (c) 2022-2026 sherpa-onnx contributors.
+License: Apache License 2.0
+Source: https://github.com/k2-fsa/sherpa-onnx
+
+Whisper tiny.en model weights
+Copyright (c) 2022 OpenAI.
+License: MIT
+Source: https://github.com/openai/whisper
+
+The application also includes JavaScript packages whose license files are
+retained within the packaged application archive. Electron supplies its own
+LICENSE and Chromium notices alongside the app executable.
+
+Full texts bundled alongside this notice:
+GEMMA_TERMS.txt, GEMMA_PROHIBITED_USE_POLICY.txt, CC_BY_4.0.txt,
+CRISPASR_LICENSE.txt, CRISPASR_THIRD_PARTY_NOTICES.txt, GGML_LICENSE.txt,
+C2PA_AUDIO_LICENSE.txt, SHERPA_ONNX_LICENSE.txt, WHISPER_LICENSE.txt,
+APACHE_2.0.txt, NPM_LICENSES.txt. SOURCES.json records downloaded text provenance.
+
+Cohere Transcribe 03-2026 (optional model download)
+Developed by Cohere / Cohere Labs. Apache License 2.0, included in APACHE_2.0.txt.
+Model card: https://huggingface.co/CohereLabs/cohere-transcribe-03-2026
+
+Model format changes
+Gemma is distributed in GGUF Q4_K_M form; Parakeet and optional Cohere in GGUF Q4_K form. These are converted/quantized derivatives of the named upstream models, not the original training-precision files. Whisper tiny.en uses ONNX int8 weights. This notice identifies those format/precision modifications and does not imply endorsement by the original model authors.

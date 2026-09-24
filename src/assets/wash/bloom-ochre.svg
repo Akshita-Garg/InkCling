@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 320" width="420" height="320">
+<defs>
+  <filter id="wf" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="4" seed="15" result="warp"/>
+    <feDisplacementMap in="SourceGraphic" in2="warp" scale="34" xChannelSelector="R" yChannelSelector="G" result="sh"/>
+    <feGaussianBlur in="sh" stdDeviation="2.5" result="soft"/>
+    <feGaussianBlur in="sh" stdDeviation="11" result="wide"/>
+    <feComposite in="soft" in2="wide" operator="arithmetic" k2="1" k3="-0.72" result="rim0"/>
+    <feComponentTransfer in="rim0" result="rimA"><feFuncA type="linear" slope="2.1"/></feComponentTransfer>
+    <feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="3" seed="16" result="blot"/>
+    <feColorMatrix in="blot" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.25 0 0 0 0.08" result="blotA"/>
+    <feComposite in="soft" in2="blotA" operator="in" result="b0"/>
+    <feComponentTransfer in="b0" result="bodyA"><feFuncA type="linear" slope="0.58"/></feComponentTransfer>
+    <feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="2" seed="17" result="gr"/>
+    <feColorMatrix in="gr" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -0.55 0 0 0 1.08" result="grA"/>
+    <feMerge result="all"><feMergeNode in="bodyA"/><feMergeNode in="rimA"/></feMerge>
+    <feComposite in="all" in2="grA" operator="in"/>
+  </filter></defs>
+<g filter="url(#wf)">
+  <path d="M75.6,179.20000000000002 C58.800000000000004,89.60000000000001 151.2,32.0 243.6,44.800000000000004
+           C344.4,57.599999999999994 394.79999999999995,128.0 361.2,198.4
+           C327.6,268.8 218.4,300.79999999999995 142.8,275.2
+           C84.0,252.8 88.2,230.39999999999998 75.6,179.20000000000002 Z" fill="#B57A16"/>
+    <circle cx="369.6" cy="83.2" r="14.399999999999999" fill="#B57A16" opacity="0.75"/>
+    <circle cx="390.6" cy="121.6" r="7.039999999999999" fill="#B57A16" opacity="0.7"/>
+    <circle cx="50.4" cy="236.8" r="11.200000000000001" fill="#B57A16" opacity="0.7"/>
+</g>
+</svg>

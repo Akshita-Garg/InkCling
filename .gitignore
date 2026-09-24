@@ -1,0 +1,30 @@
+node_modules/
+.vite/
+dist/
+out/
+.tools/
+release/
+.env
+.env.*
+!.env.example
+*.log
+*.wav
+*.webm
+*.mp3
+.DS_Store
+__pycache__/
+*.pyc
+# Model weights and compiled runtimes are obtained separately.
+resources/models/
+resources/bin/crispasr/crispasr
+resources/bin/crispasr/*.dylib
+# Internal notes and experiment data are never public source inputs.
+DIRECTORY_GUIDE.md
+START_HERE.md
+docs/*.md
+docs/design/
+bench/*
+!bench/speech-cleanup.mjs
+!bench/speech-cleanup-engine.mjs
+src/assets/ink/*.md
+src/assets/ink/approved-*.png

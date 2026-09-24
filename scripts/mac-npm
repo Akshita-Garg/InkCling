@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+app_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+node_bin="$app_root/.tools/node-v22.23.2-darwin-arm64/bin"
+
+if [ ! -x "$node_bin/node" ] || [ ! -x "$node_bin/npm" ]; then
+  echo "Project-local Node.js is missing from $node_bin" >&2
+  exit 1
+fi
+
+export PATH="$node_bin:$PATH"
+cd "$app_root"
+exec npm "$@"

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 14" width="160" height="14">
+<defs>
+  <filter id="bf" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" seed="11" result="warp"/>
+    <feDisplacementMap in="SourceGraphic" in2="warp" scale="9" xChannelSelector="R" yChannelSelector="G" result="sh"/>
+    <feGaussianBlur in="sh" stdDeviation="2.5" result="soft"/>
+    <feGaussianBlur in="sh" stdDeviation="11" result="wide"/>
+    <feComposite in="soft" in2="wide" operator="arithmetic" k2="1" k3="-0.72" result="rim0"/>
+    <feComponentTransfer in="rim0" result="rimA"><feFuncA type="linear" slope="1.7"/></feComponentTransfer>
+    <feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="3" seed="12" result="blot"/>
+    <feColorMatrix in="blot" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.25 0 0 0 0.08" result="blotA"/>
+    <feComposite in="soft" in2="blotA" operator="in" result="b0"/>
+    <feComponentTransfer in="b0" result="bodyA"><feFuncA type="linear" slope="0.72"/></feComponentTransfer>
+    <feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="2" seed="13" result="gr"/>
+    <feColorMatrix in="gr" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -0.55 0 0 0 1.08" result="grA"/>
+    <feMerge result="all"><feMergeNode in="bodyA"/><feMergeNode in="rimA"/></feMerge>
+    <feComposite in="all" in2="grA" operator="in"/>
+  </filter></defs>
+<g filter="url(#bf)">
+  <path d="M2,7.700000000000001 C40.0,2.8000000000000003 88.0,11.9 157,5.88
+           L157,10.08 C88.0,13.719999999999999 40.0,6.3 2,11.200000000000001 Z" fill="#B57A16"/>
+</g>
+</svg>
