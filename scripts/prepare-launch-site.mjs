@@ -85,7 +85,7 @@ const index = `<main>
 })();
 </script><script src="assets/living-ink.js"></script>`;
 
-fs.writeFileSync(path.join(docs, 'index.html'), shell('InkCling — Your voice, in ink', index));
+fs.writeFileSync(path.join(docs, 'index.html'), shell('InkCling: Your voice, in ink', index));
 for (const [page, filename, title] of [['terms.html', 'INKCLING_TERMS.txt', 'InkCling Terms of Use'], ['privacy.html', 'PRIVACY.txt', 'InkCling Privacy Notice']]) {
   const notice = fs.readFileSync(path.join(root, 'resources/notices', filename), 'utf8');
   fs.writeFileSync(path.join(docs, page), shell(title, `<main class="document"><h1>${title}</h1><pre>${escape(notice)}</pre><p>Full model agreements and notices: <a href="legal/GEMMA_TERMS.txt">Gemma terms</a>, <a href="legal/GEMMA_PROHIBITED_USE_POLICY.txt">Gemma use policy</a>, <a href="legal/THIRD_PARTY_NOTICES.txt">third-party notices</a>.</p></main>`));
