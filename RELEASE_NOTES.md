@@ -31,3 +31,6 @@ Requires Apple Silicon (M1 or later). Built for macOS 14 or later; independent m
 Read the [privacy notice](https://akshita-garg.github.io/InkCling/privacy.html) and [terms](https://akshita-garg.github.io/InkCling/terms.html). SHA256SUMS.txt lists installer and model checksums.
 
 Report bugs in Issues with your macOS version, Mac chip, and reproduction steps. Do not post private dictations or API keys.
+
+## Source for this refreshed build
+Use [source commit d9b5dbf](https://github.com/Akshita-Garg/InkCling/tree/d9b5dbf9879b6e495d55862b16fdb48fab1d00ae) or its [source ZIP](https://github.com/Akshita-Garg/InkCling/archive/d9b5dbf9879b6e495d55862b16fdb48fab1d00ae.zip). The original release tag is unchanged, so GitHub’s automatically generated tag-based source archives contain the earlier bundled-model build. The DMG and app ZIP above are the refreshed installers.
