@@ -10,12 +10,13 @@ Press **Control + Option + Space**, speak, then press it again. InkCling transcr
 
 - **Clean:** cleanup without a language model.
 - **Smart Refine:** one Gemma pass to help remove fillers and repetition and improve grammar.
-- Bundled Parakeet and Gemma; optional Cohere download for local speech recognition.
+- Small installer: download Parakeet, Whisper Tiny, or Cohere during setup. Local Smart Refine also downloads Gemma.
+- Pause/resume downloads, verify model checksums, and manage installed models in Settings. Models are reused across app updates.
 - Three-minute recordings, local history, no account, and no app telemetry.
 
 Requires Apple Silicon (M1 or later). Built for macOS 14 or later; independent macOS 14/15 testing is still pending. Intel Macs are not supported. The free beta is not Developer ID signed or notarized by Apple. See [release notes](RELEASE_NOTES.md) for installation instructions and limitations.
 
-The default pipeline works offline. Optional cloud refinement sends text to the provider you configure. Review important text: models can make mistakes or change meaning.
+Initial setup needs internet to download your chosen models. The default pipeline then works offline. Optional cloud refinement sends text to the provider you configure. Review important text: models can make mistakes or change meaning.
 
 ## Development
 
@@ -26,16 +27,13 @@ npm ci
 npm test
 ```
 
-Tests use generic fixtures and do not require downloading model weights. Model files and the compiled speech runtime are not committed. To run dictation or package the app, obtain the matching resources from the published InkCling app (after reviewing its model terms), or build/download those resources independently.
+Tests use generic fixtures and do not require downloading model weights. Model files and the compiled speech runtime are not committed. Download models through onboarding, or keep development copies under `resources/models` using the paths and checksums in `src/shared/modelCatalog.json`.
 
-For an installed `/Applications/InkCling.app`, copy the release resources into this checkout:
+To obtain the native speech runtime from an installed `/Applications/InkCling.app`:
 
 ```sh
-mkdir -p resources/models resources/bin
+mkdir -p resources/bin
 cp -R /Applications/InkCling.app/Contents/Resources/crispasr resources/bin/
-cp /Applications/InkCling.app/Contents/Resources/gemma-3-1b-it-Q4_K_M.gguf resources/models/
-cp -R /Applications/InkCling.app/Contents/Resources/parakeet-tdt-0.6b-v3-GGUF resources/models/
-cp -R /Applications/InkCling.app/Contents/Resources/sherpa-onnx-whisper-tiny.en resources/models/
 npm run dev
 ```
 
@@ -67,6 +65,6 @@ The public site lives in `docs/`. Generate its assets with `node scripts/prepare
 
 Development runs save detailed local text diagnostics and audio recordings. Packaged releases redact transcript fields and do not save raw audio by default. Neither uploads diagnostics automatically. Keep local logs and personal recordings out of commits and public bug reports.
 
-Read the [privacy notice](docs/legal/PRIVACY.txt), [terms](docs/legal/INKCLING_TERMS.txt), and [third-party notices](docs/legal/THIRD_PARTY_NOTICES.txt). App code is MIT licensed; bundled models retain their own terms.
+Read the [privacy notice](docs/legal/PRIVACY.txt), [terms](docs/legal/INKCLING_TERMS.txt), and [third-party notices](docs/legal/THIRD_PARTY_NOTICES.txt). App code is MIT licensed; downloaded models retain their own terms.
 
 Report bugs in [Issues](https://github.com/Akshita-Garg/InkCling/issues) with macOS version, Mac chip, and reproduction steps. Do not post private dictations or API keys.

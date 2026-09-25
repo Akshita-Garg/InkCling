@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Mic, Square } from 'lucide-react'
 import { useAudioRecorder } from '../hooks/useAudioRecorder'
 
@@ -8,9 +8,10 @@ function formatTime(seconds) {
   return `${m}:${s}`
 }
 
-export function RecordButton({ onAudioReady, isProcessing, onRecordingChange, disabled, variant, idleLabel, busyLabel }) {
+export function RecordButton({ onAudioReady, isProcessing, onRecordingChange, disabled, variant, idleLabel, busyLabel, beforeStart }) {
   const { state, countdown, audioBlob, error, toggle } = useAudioRecorder()
   const lastProcessedBlob = useRef(null)
+  const [modelError, setModelError] = useState('')
 
   // Fire onAudioReady once per recording. The blob stays set between recordings
   // and onAudioReady's identity changes on every parent render, so without this
@@ -26,21 +27,29 @@ export function RecordButton({ onAudioReady, isProcessing, onRecordingChange, di
     onRecordingChange?.(state === 'recording')
   }, [state, onRecordingChange])
 
+  const handleToggle = async () => {
+    setModelError('')
+    try {
+      if (state !== 'recording' && beforeStart && !await beforeStart()) return
+      toggle()
+    } catch (err) { setModelError(err.message || 'Could not prepare your models.') }
+  }
+
   const isRecording = state === 'recording'
   const isBlocked   = disabled || isProcessing
 
-  const errorText = error === 'permission_denied'
+  const errorText = modelError || (error === 'permission_denied'
     ? 'Microphone access denied. Allow microphone access in System Settings and try again.'
     : error === 'unavailable'
       ? 'Could not access your microphone. Make sure it is connected and try again.'
-      : null
+      : null)
 
   // Compact row used at the top of the journal: button on the left, status beside it.
   if (variant === 'bar') {
     return (
       <div className="ic-recbar">
         <button
-          onClick={toggle}
+          onClick={handleToggle}
           disabled={isBlocked}
           className="ic-record ic-record-sm"
           data-recording={isRecording}
@@ -70,7 +79,7 @@ export function RecordButton({ onAudioReady, isProcessing, onRecordingChange, di
   return (
     <div className="ic-record-wrap gap-3">
       <button
-        onClick={toggle}
+        onClick={handleToggle}
         disabled={isBlocked}
         className="ic-record"
         data-recording={isRecording}

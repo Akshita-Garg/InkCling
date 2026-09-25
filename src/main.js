@@ -1,23 +1,19 @@
 import { DEFAULT_TRANSFORM_PRESET, defaultPromptForPreset } from './utils/composePrompt';
 import { DEFAULT_RECORDING_SHORTCUT as DEFAULT_HOTKEY_ACCELERATOR, isReservedAccelerator } from './utils/shortcut.js';
-import { app, BrowserWindow, clipboard, dialog, globalShortcut, ipcMain, net, screen, session, shell, systemPreferences } from 'electron';
+import { app, BrowserWindow, clipboard, dialog, globalShortcut, ipcMain, screen, session, shell, systemPreferences } from 'electron';
 import { execFile } from 'node:child_process';
 import fs from 'node:fs';
-import { createHash } from 'node:crypto';
-import { Readable, Transform } from 'node:stream';
-import { pipeline } from 'node:stream/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import started from 'electron-squirrel-startup';
-import { holdNativeAsrModels, isCohereModelAvailable, preloadNativeAsrModel, shutdownNativeAsrModels, transcribeNative, unloadNativeAsrModels } from './main/asr.js';
+import { holdNativeAsrModels, preloadNativeAsrModel, shutdownNativeAsrModels, transcribeNative, unloadNativeAsrModels } from './main/asr.js';
 import { createHistoryStore } from './main/history.js';
 import { pasteToMacTarget, readFrontmostMacApp } from './main/macPaste.js';
 import { attachRendererLogging, initializeFileLogging } from './main/logger.js';
 import { clearUnloadTimer, refineBuiltin, unloadBuiltinModel, warmBuiltin } from './main/refine.js';
-import { COHERE_DOWNLOAD, verifyModelDownload } from './main/modelDownloads.js';
+import { models, missingModels } from './main/models.js';
 import { ensureTermsAccepted, installAppMenu } from './main/legal.js';
 
-let cohereDownloadActive = false;
 
 const execFileAsync = promisify(execFile);
 
@@ -372,6 +368,12 @@ async function showOverlayAndStartRecording() {
     return;
   }
 
+  if (missingModels(selectedNativeAsrModel, refinementSettings).length) {
+    if (!mainWindow) createWindow();
+    mainWindow.show(); mainWindow.focus();
+    mainWindow.webContents.send('models-required');
+    return;
+  }
   overlayStarting = true;
   releaseRecordingAsrHold?.();
   releaseRecordingAsrHold = holdNativeAsrModels();
@@ -720,58 +722,20 @@ app.whenReady().then(async () => {
       if (failedSession === overlaySession && !overlayStarting && !overlayRecording && !overlayProcessing) overlayWindow?.hide();
     }, OVERLAY_NOTICE_MS);
   });
-  ipcMain.handle('check-cohere-model', () => {
-    return { available: isCohereModelAvailable() };
-  });
-  ipcMain.handle('download-cohere-model', async (event) => {
-    if (cohereDownloadActive) return { ok: false, reason: 'already-downloading' };
-    cohereDownloadActive = true;
-
-    const destDir = path.join(app.getPath('userData'), 'models', 'cohere-transcribe-03-2026-GGUF');
-    const tempPath = path.join(destDir, 'cohere-transcribe-q4_k.gguf.part');
-    const finalPath = path.join(destDir, 'cohere-transcribe-q4_k.gguf');
-
-    let writeStream = null;
-    try {
-      await fs.promises.mkdir(destDir, { recursive: true });
-      const response = await net.fetch(COHERE_DOWNLOAD.url);
-      if (!response.ok) throw new Error(`Download failed: ${response.status}`);
-      if (!response.body) throw new Error('Download returned no model data.');
-
-      const total = parseInt(response.headers.get('content-length') || '0', 10);
-      let downloaded = 0;
-      const digest = createHash('sha256');
-      writeStream = fs.createWriteStream(tempPath);
-      const progress = new Transform({
-        transform(chunk, _encoding, callback) {
-          downloaded += chunk.length;
-          digest.update(chunk);
-          if (!event.sender.isDestroyed()) event.sender.send('cohere-download-progress', {
-            percent: total > 0 ? Math.round((downloaded / total) * 100) : 0,
-            downloaded, total,
-          });
-          callback(null, chunk);
-        },
-      });
-      await pipeline(Readable.fromWeb(response.body), progress, writeStream);
-      writeStream = null;
-      verifyModelDownload(downloaded, digest.digest('hex'));
-      await fs.promises.rename(tempPath, finalPath);
-      console.log('[cohere-download] complete', { path: finalPath });
-      return { ok: true };
-    } catch (err) {
-      console.warn('[cohere-download] failed', err);
-      // Close the write handle and cancel the reader before deleting, on Windows
-      // an open handle blocks unlink (EBUSY) and leaks the fd otherwise.
-      if (writeStream && !writeStream.destroyed) {
-        await new Promise(resolve => writeStream.end(() => resolve()));
-      }
-      await fs.promises.unlink(tempPath).catch(() => {});
-      return { ok: false, reason: err.message };
-    } finally {
-      cohereDownloadActive = false;
+  ipcMain.handle('list-models', () => models().list());
+  ipcMain.handle('download-model', (_event, id) => models().download(id));
+  ipcMain.handle('cancel-model-download', (_event, id) => models().cancel(id));
+  ipcMain.handle('remove-model', async (_event, id) => {
+    if (id === selectedNativeAsrModel || (id === 'gemma' && refinementSettings.provider === 'builtin' && refinementSettings.refinementMode === 'transform')) {
+      throw new Error('Switch to another model or Clean mode before removing the model in use.');
     }
+    if (overlayRecording || overlayProcessing || overlayStarting) throw new Error('Finish your dictation first.');
+    if (id === 'gemma') await unloadBuiltinModel();
+    else await unloadNativeAsrModels();
+    await models().remove(id);
+    return { ok: true };
   });
+  ipcMain.handle('check-recording-models', () => ({ missing: missingModels(selectedNativeAsrModel, refinementSettings).map(m => m.label) }));
 
   createWindow();
   createOverlayWindow();

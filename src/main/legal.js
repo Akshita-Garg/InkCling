@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { app, dialog, Menu, shell } from 'electron';
 
-export const TERMS_VERSION = '2026-09-18';
+export const TERMS_VERSION = '2026-09-25';
 export function noticesDirectory() {
   return app.isPackaged ? path.join(process.resourcesPath, 'notices') : path.join(app.getAppPath(), 'resources/notices');
 }

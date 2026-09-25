@@ -1,3 +1,4 @@
+import { models } from './models.js';
 import { app } from 'electron';
 import path from 'node:path';
 import { calculateMaxTokens } from '../utils/refinementBudget.js';
@@ -28,10 +29,7 @@ function getModelPath() {
   const configuredPath = process.env.VOICEREFINE_REFINEMENT_MODEL?.trim();
   if (configuredPath) return path.resolve(configuredPath);
 
-  if (app.isPackaged) {
-    return path.join(process.resourcesPath, 'gemma-3-1b-it-Q4_K_M.gguf');
-  }
-  return path.join(app.getAppPath(), 'resources', 'models', 'gemma-3-1b-it-Q4_K_M.gguf');
+  return models().requireFile('gemma');
 }
 
 function getGpuMode() {

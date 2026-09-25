@@ -1,5 +1,5 @@
 InkCling — Privacy Notice
-Version: 2026-09-18
+Version: 2026-09-25
 
 Local processing
 By default, speech recognition and Gemma refinement run on your Mac. InkCling does not send dictation audio or text to an InkCling server. No account is required, and this version includes no app analytics or telemetry uploader.
@@ -16,8 +16,8 @@ Packaged releases write operational timings, status, and errors under ~/Library/
 Development and opt-in diagnostics
 Development builds keep detailed text diagnostics and WAV recordings for debugging. Explicit diagnostic environment settings can also enable this in a packaged build. Those files remain on the Mac until removed. The app does not automatically delete development recordings when you clear history.
 
-Optional network features
-Downloading the optional Cohere model contacts GitHub and its download infrastructure. Those services receive ordinary network request information, such as your IP address. The model is subsequently run locally. If you explicitly choose a cloud refinement provider, transcript text and refinement instructions are sent to that provider using your API key. Speech recognition remains local. Cloud providers have their own privacy policies and may charge for usage. API keys are stored in the application's local settings; InkCling does not provide a separate encrypted credential vault in this version.
+Model downloads and optional network features
+Initial setup requires internet access to download your selected speech model and, if you choose local Smart Refine, Gemma. Downloads are stored under ~/Library/Application Support/InkCling/models, verified before use, and reused across app updates. You can remove inactive downloaded models in Settings. Downloading models contacts GitHub and its download infrastructure. Those services receive ordinary network request information, such as your IP address. The models subsequently run locally, without an internet connection. If you explicitly choose a cloud refinement provider, transcript text and refinement instructions are sent to that provider using your API key. Speech recognition remains local. Cloud providers have their own privacy policies and may charge for usage. API keys are stored in the application's local settings; InkCling does not provide a separate encrypted credential vault in this version.
 
 Removal and questions
 Use the app's history control to clear transcripts. For full local removal, quit InkCling, remove the application, and remove ~/Library/Application Support/InkCling and ~/Library/Logs/InkCling. This deletes settings, history, downloaded models, and diagnostics and cannot be undone without a backup. Your clipboard must be cleared separately. App support: https://github.com/Akshita-Garg/InkCling/issues. Do not post private recordings, transcripts, or keys publicly.

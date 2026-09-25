@@ -1,0 +1,74 @@
+[
+  {
+    "id": "parakeet-q4",
+    "label": "Parakeet \u00b7 Balanced",
+    "description": "Recommended for everyday dictation.",
+    "kind": "speech",
+    "files": [
+      {
+        "path": "parakeet-tdt-0.6b-v3-GGUF/parakeet-tdt-0.6b-v3-q4_k.gguf",
+        "bytes": 488674176,
+        "sha256": "1a60f6e53e5781240dde6e69a47a47a8a71995a3a106517b009225afcc514457",
+        "url": "https://github.com/Akshita-Garg/InkCling/releases/download/inkcling-v1.0.0/parakeet-tdt-0.6b-v3-q4_k.gguf"
+      }
+    ],
+    "bytes": 488674176
+  },
+  {
+    "id": "fast",
+    "label": "Whisper Tiny \u00b7 Quick",
+    "description": "Small English-only model for quick drafts.",
+    "kind": "speech",
+    "files": [
+      {
+        "path": "sherpa-onnx-whisper-tiny.en/tiny.en-encoder.int8.onnx",
+        "bytes": 12937772,
+        "sha256": "0ce578b827c94a961aacb8fa14b02f096504b337e5c94be37c36238cbe3e8bc6",
+        "url": "https://github.com/Akshita-Garg/InkCling/releases/download/inkcling-v1.0.0/tiny.en-encoder.int8.onnx"
+      },
+      {
+        "path": "sherpa-onnx-whisper-tiny.en/tiny.en-decoder.int8.onnx",
+        "bytes": 89853865,
+        "sha256": "06c0e6ff6348d427e51839219d1c886c18cfdf411e629e33f5e1679bff9c1527",
+        "url": "https://github.com/Akshita-Garg/InkCling/releases/download/inkcling-v1.0.0/tiny.en-decoder.int8.onnx"
+      },
+      {
+        "path": "sherpa-onnx-whisper-tiny.en/tiny.en-tokens.txt",
+        "bytes": 835554,
+        "sha256": "306cd27f03c1a714eca7108e03d66b7dc042abe8c258b44c199a7ed9838dd930",
+        "url": "https://github.com/Akshita-Garg/InkCling/releases/download/inkcling-v1.0.0/tiny.en-tokens.txt"
+      }
+    ],
+    "bytes": 103627191
+  },
+  {
+    "id": "cohere-q4",
+    "label": "Cohere \u00b7 Precise",
+    "description": "For harder audio, with higher memory use.",
+    "kind": "speech",
+    "files": [
+      {
+        "path": "cohere-transcribe-03-2026-GGUF/cohere-transcribe-q4_k.gguf",
+        "bytes": 1510362752,
+        "sha256": "2931fc0ac6d6708eef5389aadf1ebd5eec7b8e764bac385be585e910c0e7b410",
+        "url": "https://github.com/Akshita-Garg/InkCling/releases/download/inkcling-v1.0.0/cohere-transcribe-q4_k.gguf"
+      }
+    ],
+    "bytes": 1510362752
+  },
+  {
+    "id": "gemma",
+    "label": "Gemma \u00b7 Smart Refine",
+    "description": "Removes fillers and repetition, and helps improve grammar.",
+    "kind": "refinement",
+    "files": [
+      {
+        "path": "gemma-3-1b-it-Q4_K_M.gguf",
+        "bytes": 806058272,
+        "sha256": "8270790f3ab69fdfe860b7b64008d9a19986d8df7e407bb018184caa08798ebd",
+        "url": "https://github.com/Akshita-Garg/InkCling/releases/download/inkcling-v1.0.0/gemma-3-1b-it-Q4_K_M.gguf"
+      }
+    ],
+    "bytes": 806058272
+  }
+]

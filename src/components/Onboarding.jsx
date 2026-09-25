@@ -1,3 +1,4 @@
+import { ModelManager } from './ModelManager'
 import { useState, useEffect, useRef } from 'react'
 import { Eraser, Sparkles } from 'lucide-react'
 import { validateKey } from '../services/llm'
@@ -26,7 +27,7 @@ const REFINEMENT_CHOICES = [
 ]
 
 const PROVIDERS = [
-  { value: 'builtin', label: 'Built-in (Recommended)', needsKey: false, description: 'Smart Refine runs locally on your device using a bundled model. No internet required.' },
+  { value: 'builtin', label: 'Built-in (Recommended)', needsKey: false, description: 'Smart Refine runs locally on your device using a downloaded model. Offline after setup.' },
   { value: 'gemini',  label: 'Cloud (Gemini)',         needsKey: true, description: 'Free API key from Google AI Studio.' },
   { value: 'openai',  label: 'Cloud (OpenAI)',         needsKey: true, description: 'Requires an OpenAI API key.' },
 ]
@@ -344,7 +345,7 @@ function ProviderStep({ onComplete }) {
         disabled={!canContinue}
         className="ic-btn ic-btn-primary"
       >
-        Get started
+        Continue
       </button>
     </div>
   )
@@ -369,9 +370,7 @@ export function Onboarding({ onComplete }) {
       localStorage.setItem('vr_transform_preset', DEFAULT_TRANSFORM_PRESET)
       localStorage.setItem('vr_transform_prompt_mode', TRANSFORM_PROMPT_MODE_PRESET)
       localStorage.setItem(promptStorageKeyForPreset('structure'), defaultPromptForPreset('structure'))
-      localStorage.setItem('vr_onboarding_done', 'true')
-      setFading(true)
-      fadeTimerRef.current = setTimeout(onComplete, 500)
+      setStep(3)
       return
     }
     setStep(3)
@@ -379,23 +378,29 @@ export function Onboarding({ onComplete }) {
 
   const handleProviderComplete = () => {
     localStorage.setItem('vr_refinement_mode', REFINEMENT_MODE_TRANSFORM)
-    localStorage.setItem('vr_onboarding_done', 'true')
-    setFading(true)
-    fadeTimerRef.current = setTimeout(onComplete, 500)
+    setStep(4)
   }
 
   return (
     <div className={`ic-paper-bg ic-onboarding ic-no-drag fixed inset-0 z-50 flex flex-col items-center justify-center px-6 transition-opacity duration-500 ${fading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
       <div className="ic-titlebar ic-drag absolute top-0 left-0 right-0 flex items-center justify-end pr-6">
-        <span className="ic-muted">Step {step} of {refinementMode === REFINEMENT_MODE_TRANSFORM ? 3 : 2}</span>
+        <span className="ic-muted">Step {step} of {refinementMode === REFINEMENT_MODE_TRANSFORM ? 4 : 3}</span>
       </div>
       {step !== 1 && <h1 className="ic-app-title absolute left-6 top-[var(--ic-titlebar-h)]">InkCling</h1>}
 
       {step === 1 && <Step1 refinementMode={refinementMode} onSelect={setRefinementMode} onContinue={handleStep1Continue} />}
       {step === 2 && <ShortcutStep onContinue={handleShortcutContinue} />}
-      {step === 3 && <ProviderStep onComplete={handleProviderComplete} />}
+      {step === 3 && refinementMode === REFINEMENT_MODE_TRANSFORM && <ProviderStep onComplete={handleProviderComplete} />}
+      {step === (refinementMode === REFINEMENT_MODE_TRANSFORM ? 4 : 3) && <div className="w-full max-w-xl overflow-y-auto max-h-[75vh] px-1">
+        <h1 className="ic-h1 mb-4 text-center">Make room for your words</h1>
+        <ModelManager setup needsGemma={refinementMode === REFINEMENT_MODE_TRANSFORM && localStorage.getItem('vr_provider') === 'builtin'} onComplete={() => {
+          localStorage.setItem('vr_onboarding_done', 'true')
+          setFading(true)
+          fadeTimerRef.current = setTimeout(onComplete, 500)
+        }} />
+      </div>}
       <div className="ic-steps absolute bottom-8">
-        {Array.from({ length: refinementMode === REFINEMENT_MODE_TRANSFORM ? 3 : 2 }, (_, index) => <span key={index} data-active={step === index + 1} />)}
+        {Array.from({ length: refinementMode === REFINEMENT_MODE_TRANSFORM ? 4 : 3 }, (_, index) => <span key={index} data-active={step === index + 1} />)}
       </div>
     </div>
   )

@@ -1,3 +1,4 @@
+import { ModelManager } from './ModelManager'
 import { useState, useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
 import { validateKey } from '../services/llm'
@@ -9,46 +10,17 @@ import {
   readStoredPromptDraftForPreset,
   readTransformPromptMode,
 } from '../utils/refinementSettings'
-import {
-  currentNativeAsrModel,
-  NATIVE_ASR_MODEL_COHERE_Q4,
-  NATIVE_ASR_MODEL_FAST,
-  NATIVE_ASR_MODEL_PARAKEET_Q4,
-  preloadNativeAsrModel,
-  syncSelectedNativeAsrModel,
-} from '../services/asr'
 import { formatShortcutLabel, isModifierOnlyEvent, isReservedAccelerator, shortcutFromEvent } from '../utils/shortcut'
 
 const PROVIDER_OPTIONS = [
-  { value: 'builtin', label: 'Built-in (Recommended)', needsKey: false, description: 'Smart Refine runs locally on your device using a bundled model. No setup, no internet required.' },
+  { value: 'builtin', label: 'Built-in (Recommended)', needsKey: false, description: 'Smart Refine runs locally on your device using a downloaded model. Offline after setup.' },
   { value: 'gemini',  label: 'Cloud (Gemini)',         needsKey: true,  description: 'Free API key from Google AI Studio.' },
   { value: 'openai',  label: 'Cloud (OpenAI)',         needsKey: true,  description: 'Requires an OpenAI API key.' },
-]
-
-const NATIVE_ASR_MODEL_OPTIONS = [
-  {
-    value: NATIVE_ASR_MODEL_FAST,
-    label: 'Quick',
-    description: 'Lowest latency for rough drafts when speed matters more than exact wording.',
-  },
-  {
-    value: NATIVE_ASR_MODEL_PARAKEET_Q4,
-    label: 'Balanced',
-    badge: 'Included',
-    description: 'Recommended for everyday dictation. Keeps the local transcription engine warm for faster repeated captures.',
-  },
-  {
-    value: NATIVE_ASR_MODEL_COHERE_Q4,
-    label: 'Precise',
-    badge: 'Recommended',
-    description: 'Higher-accuracy local transcription for harder audio. Stays ready between dictations, with a larger memory footprint.',
-  },
 ]
 
 export function SettingsPanel({ open, onClose, onSaved }) {
   const [provider, setProvider] = useState('builtin')
   const [apiKey, setApiKey] = useState('')
-  const [nativeAsrModel, setNativeAsrModel] = useState(NATIVE_ASR_MODEL_PARAKEET_Q4)
   const [recordingShortcut, setRecordingShortcut] = useState('')
   const [defaultRecordingShortcut, setDefaultRecordingShortcut] = useState('')
   const [isCapturingShortcut, setIsCapturingShortcut] = useState(false)
@@ -57,11 +29,6 @@ export function SettingsPanel({ open, onClose, onSaved }) {
   const [transformPromptMode, setTransformPromptMode] = useState(TRANSFORM_PROMPT_MODE_PRESET)
   const [transformPromptEditorOpen, setTransformPromptEditorOpen] = useState(false)
   const [structurePrompt, setStructurePrompt] = useState('')
-  const [asrModelStatus, setAsrModelStatus] = useState('idle')
-  const [cohereAvailable, setCohereAvailable] = useState(true)
-  const [cohereDownloading, setCohereDownloading] = useState(false)
-  const [cohereDownloadPercent, setCohereDownloadPercent] = useState(0)
-  const [cohereDownloadError, setCohereDownloadError] = useState('')
   const [keyStatus, setKeyStatus] = useState('idle')
   const [keyError, setKeyError] = useState('')
   const shortcutButtonRef = useRef(null)
@@ -71,7 +38,6 @@ export function SettingsPanel({ open, onClose, onSaved }) {
     const stored = localStorage.getItem('vr_provider') ?? 'builtin'
     setProvider(stored === 'browser' || stored === 'ollama' || stored === 'none' ? 'builtin' : stored)
     setApiKey(localStorage.getItem('vr_api_key') ?? '')
-    setNativeAsrModel(currentNativeAsrModel())
     window.voicerefine?.getRecordingShortcut?.().then(result => {
       setRecordingShortcut(result?.accelerator ?? '')
       setDefaultRecordingShortcut(result?.defaultAccelerator ?? '')
@@ -84,13 +50,6 @@ export function SettingsPanel({ open, onClose, onSaved }) {
     setStructurePrompt(storedTransformPromptMode === TRANSFORM_PROMPT_MODE_CUSTOM
       ? readStoredPromptDraftForPreset('structure')
       : defaultPromptForPreset('structure'))
-    setAsrModelStatus('idle')
-    setCohereDownloading(false)
-    setCohereDownloadPercent(0)
-    setCohereDownloadError('')
-    window.voicerefine?.checkCohereModel?.().then(result => {
-      setCohereAvailable(result?.available ?? true)
-    }).catch(() => {})
     setKeyStatus('idle')
     setKeyError('')
     setShortcutStatus('idle')
@@ -182,43 +141,6 @@ export function SettingsPanel({ open, onClose, onSaved }) {
     localStorage.removeItem(promptStorageKeyForPreset('structure'))
     localStorage.removeItem('vr_transform_prompt')
     onSaved?.({ warm: false })
-  }
-
-  const handleDownloadCohere = async () => {
-    setCohereDownloading(true)
-    setCohereDownloadPercent(0)
-    setCohereDownloadError('')
-    const unsubscribe = window.voicerefine?.onCohereDownloadProgress?.(({ percent }) => {
-      setCohereDownloadPercent(percent)
-    })
-    try {
-      const result = await window.voicerefine?.downloadCohereModel?.()
-      if (result?.ok) {
-        setCohereAvailable(true)
-        await handleNativeAsrModelChange(NATIVE_ASR_MODEL_COHERE_Q4)
-      } else {
-        setCohereDownloadError(result?.reason ?? 'Download failed.')
-      }
-    } catch (err) {
-      setCohereDownloadError(err?.message ?? 'Download failed.')
-    } finally {
-      unsubscribe?.()
-      setCohereDownloading(false)
-    }
-  }
-
-  const handleNativeAsrModelChange = async (model) => {
-    setNativeAsrModel(model)
-    localStorage.setItem('vr_native_asr_model', model)
-    setAsrModelStatus('loading')
-    try {
-      await syncSelectedNativeAsrModel(model)
-      await preloadNativeAsrModel(model)
-      setAsrModelStatus('ready')
-    } catch (err) {
-      console.warn('[settings] ASR model preload failed', err)
-      setAsrModelStatus('error')
-    }
   }
 
   const handleShortcutKeyDown = (event) => {
@@ -367,59 +289,8 @@ export function SettingsPanel({ open, onClose, onSaved }) {
           )}
 
           <section>
-            <h3 className="ic-label mb-3">Transcription</h3>
-            <div className="flex flex-col gap-2">
-              {NATIVE_ASR_MODEL_OPTIONS.map(({ value, label, badge, description }) => {
-                const isPrecise = value === NATIVE_ASR_MODEL_COHERE_Q4
-                const preciseUnavailable = isPrecise && !cohereAvailable
-                return (
-                  <label key={value} className={`flex items-start gap-3 ${preciseUnavailable ? 'cursor-default opacity-60' : 'cursor-pointer'}`}>
-                    <input
-                      type="radio"
-                      name="native-asr-model"
-                      value={value}
-                      checked={nativeAsrModel === value}
-                      onChange={() => handleNativeAsrModelChange(value)}
-                      disabled={preciseUnavailable}
-                      className="mt-0.5 flex-shrink-0"
-                    />
-                    <span className="flex flex-col gap-1 flex-1">
-                      <span className="flex items-center gap-2 text-sm text-[var(--ic-ink)] font-medium">
-                        {label}
-                        {badge && <span className="ic-badge">{badge}</span>}
-                      </span>
-                      <span className="text-xs text-[var(--ic-ink-faint)] leading-snug">{description}</span>
-                      {isPrecise && !cohereAvailable && !cohereDownloading && (
-                        <div className="flex items-center gap-2 mt-1">
-                          <button
-                            type="button"
-                            onClick={handleDownloadCohere}
-                            className="ic-btn ic-btn-secondary px-2 py-1 text-xs"
-                                    >
-                            Download model (1.5 GB)
-                          </button>
-                          {cohereDownloadError && <span className="ic-error">{cohereDownloadError}</span>}
-                        </div>
-                      )}
-                      {isPrecise && cohereDownloading && (
-                        <div className="flex flex-col gap-1 mt-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-[var(--ic-ink-faint)]">Downloading…</span>
-                            <span className="text-xs text-[var(--ic-ink-faint)]">{cohereDownloadPercent}%</span>
-                          </div>
-                          <div className="ic-progress">
-                            <div style={{ width: `${cohereDownloadPercent}%` }} />
-                          </div>
-                        </div>
-                      )}
-                    </span>
-                  </label>
-                )
-              })}
-            </div>
-            {asrModelStatus === 'loading' && <p className="mt-2 text-xs text-[var(--ic-ink-faint)]">Loading selected transcription model...</p>}
-            {asrModelStatus === 'ready' && <p className="ic-success mt-2">Selected transcription model is ready.</p>}
-            {asrModelStatus === 'error' && <p className="ic-error mt-2">Could not preload the selected transcription model.</p>}
+            <h3 className="ic-label mb-3">Models</h3>
+            <ModelManager needsGemma={provider === 'builtin' && localStorage.getItem('vr_refinement_mode') === 'transform'} onChanged={() => onSaved?.({ warm: false })} />
           </section>
 
           <section>

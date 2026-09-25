@@ -1,3 +1,4 @@
+import { models } from './models.js';
 import { app } from 'electron';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -64,7 +65,7 @@ function getWhisperModelDir() {
     return process.env.VOICEREFINE_SHERPA_MODEL_DIR;
   }
 
-  return path.join(getModelRoot(), 'sherpa-onnx-whisper-tiny.en');
+  return path.dirname(models().requireFile('fast'));
 }
 
 function getCohereQ4ModelPath() {
@@ -72,13 +73,11 @@ function getCohereQ4ModelPath() {
     return process.env.VOICEREFINE_CRISPASR_COHERE_MODEL;
   }
 
-  const userDataPath = path.join(app.getPath('userData'), 'models', 'cohere-transcribe-03-2026-GGUF', 'cohere-transcribe-q4_k.gguf');
-  if (fs.existsSync(userDataPath)) return userDataPath;
-  return path.join(getModelRoot(), 'cohere-transcribe-03-2026-GGUF', 'cohere-transcribe-q4_k.gguf');
+  return models().requireFile('cohere-q4');
 }
 
 export function isCohereModelAvailable() {
-  return fs.existsSync(getCohereQ4ModelPath());
+  return models().list().find(m => m.id === 'cohere-q4').available;
 }
 
 function getParakeetQ4ModelPath() {
@@ -86,7 +85,7 @@ function getParakeetQ4ModelPath() {
     return process.env.VOICEREFINE_CRISPASR_PARAKEET_MODEL;
   }
 
-  return path.join(getModelRoot(), 'parakeet-tdt-0.6b-v3-GGUF', 'parakeet-tdt-0.6b-v3-q4_k.gguf');
+  return models().requireFile('parakeet-q4');
 }
 
 function getCrispAsrServerPort() {

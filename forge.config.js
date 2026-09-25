@@ -104,11 +104,8 @@ module.exports = {
     executableName: 'InkCling',
     icon: 'resources/icons/icon',
     appCopyright: `Copyright (c) ${new Date().getFullYear()} Akshita Garg`,
-    // Only the active models and the macOS sidecar are packaged.
+    // Model weights are downloaded on demand, outside the signed app bundle.
     extraResource: [
-      'resources/models/gemma-3-1b-it-Q4_K_M.gguf',
-      'resources/models/parakeet-tdt-0.6b-v3-GGUF',
-      'resources/models/sherpa-onnx-whisper-tiny.en',
       'resources/bin/crispasr',
       'resources/notices',
     ],

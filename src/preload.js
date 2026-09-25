@@ -57,11 +57,17 @@ contextBridge.exposeInMainWorld('voicerefine', {
     ipcRenderer.on('overlay-transcription-result', listener);
     return () => ipcRenderer.removeListener('overlay-transcription-result', listener);
   },
-  checkCohereModel: () => ipcRenderer.invoke('check-cohere-model'),
-  downloadCohereModel: () => ipcRenderer.invoke('download-cohere-model'),
-  onCohereDownloadProgress: (handler) => {
-    const listener = (_event, data) => handler(data);
-    ipcRenderer.on('cohere-download-progress', listener);
-    return () => ipcRenderer.removeListener('cohere-download-progress', listener);
+  listModels: () => ipcRenderer.invoke('list-models'),
+  downloadModel: id => ipcRenderer.invoke('download-model', id),
+  cancelModelDownload: id => ipcRenderer.invoke('cancel-model-download', id),
+  removeModel: id => ipcRenderer.invoke('remove-model', id),
+  checkRecordingModels: () => ipcRenderer.invoke('check-recording-models'),
+  onModelsRequired: handler => {
+    const listener = () => handler(); ipcRenderer.on('models-required', listener);
+    return () => ipcRenderer.removeListener('models-required', listener);
+  },
+  onModelDownloadProgress: handler => {
+    const listener = (_event, data) => handler(data); ipcRenderer.on('model-download-progress', listener);
+    return () => ipcRenderer.removeListener('model-download-progress', listener);
   },
 });

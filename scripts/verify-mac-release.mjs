@@ -45,9 +45,6 @@ if (plistValue('LSApplicationCategoryType') !== 'public.app-category.productivit
 
 const resources = path.join(appPath, 'Contents', 'Resources');
 for (const relativePath of [
-  'gemma-3-1b-it-Q4_K_M.gguf',
-  'parakeet-tdt-0.6b-v3-GGUF/parakeet-tdt-0.6b-v3-q4_k.gguf',
-  'sherpa-onnx-whisper-tiny.en/tiny.en-encoder.int8.onnx',
   'crispasr/crispasr',
   'notices/THIRD_PARTY_NOTICES.txt',
   'notices/GEMMA_NOTICE.txt',
@@ -59,8 +56,8 @@ for (const relativePath of [
 ]) {
   if (!fs.existsSync(path.join(resources, relativePath))) fail(`Packaged resource missing: ${relativePath}`);
 }
-if (filesUnder(resources).some(file => file.includes(`${path.sep}candidates${path.sep}`))) {
-  fail('A candidate model was included in the app bundle.');
+if (filesUnder(resources).some(file => /\.(gguf|onnx)$/i.test(file))) {
+  fail('Model weights were included in the app bundle.');
 }
 
 run('codesign', ['--verify', '--deep', '--strict', '--verbose=2', appPath]);

@@ -46,9 +46,6 @@ if (!/^\d+\.\d+\.\d+(?:[-+].+)?$/.test(packageJson.version)) {
 }
 
 const crispPath = requiredFile('resources/bin/crispasr/crispasr', 1_000_000);
-requiredFile('resources/models/gemma-3-1b-it-Q4_K_M.gguf', 700_000_000);
-requiredFile('resources/models/parakeet-tdt-0.6b-v3-GGUF/parakeet-tdt-0.6b-v3-q4_k.gguf', 300_000_000);
-requiredFile('resources/models/sherpa-onnx-whisper-tiny.en/tiny.en-encoder.int8.onnx', 1_000_000);
 requiredFile('resources/icons/icon.icns', 4_000);
 requiredFile('resources/entitlements.mac.release.plist', 100);
 requiredFile('resources/notices/THIRD_PARTY_NOTICES.txt', 500);
@@ -73,7 +70,8 @@ const nativeAudit = auditMacRuntime([
 ]);
 
 const packagedResources = JSON.stringify(forgeConfig.packagerConfig.extraResource);
-if (/candidates/i.test(packagedResources)) fail('Candidate models must not be packaged.');
+if (/models/i.test(packagedResources)) fail('Model weights must be downloaded, not packaged.');
+requiredFile('src/shared/modelCatalog.json', 500);
 
 if (distribution) {
   if (!process.env.VOICEREFINE_MAC_SIGN_IDENTITY) {
@@ -84,7 +82,7 @@ if (distribution) {
   }
   if (!hasNotaryCredentials()) fail('Notarization credentials are missing.');
   if (process.env.INKCLING_RELEASE_REVIEWED !== '1') {
-    fail('Review the release terms, privacy notice, licenses, and installation behavior, then set INKCLING_RELEASE_REVIEWED=1.');
+    fail('Complete the release review, then set INKCLING_RELEASE_REVIEWED=1 for the reviewed release.');
   }
 }
 

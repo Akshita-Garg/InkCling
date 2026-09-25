@@ -1,3 +1,4 @@
+import { ModelManager } from './components/ModelManager'
 import { LivingInk } from './components/LivingInk'
 import { useState, useEffect, useCallback } from 'react'
 import { Eraser, Sparkles, Settings } from 'lucide-react'
@@ -62,7 +63,9 @@ function syncRefinementSettings() {
 
 function warmSelectedRefinementProvider({ refinementMode = readRefinementMode(), provider = readProvider() } = {}) {
   if (provider !== 'builtin' || refinementMode !== REFINEMENT_MODE_TRANSFORM) return
-  warmBuiltinRefinement().catch(err => {
+  window.voicerefine?.listModels?.().then(models => {
+    if (models.find(m => m.id === 'gemma')?.available) return warmBuiltinRefinement()
+  }).catch(err => {
     console.warn('[refine] warmup failed', err)
   })
 }
@@ -77,6 +80,7 @@ function App() {
   const [retransformingId, setRetransformingId] = useState(null)
   const [provider, setProvider] = useState(readProvider)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [modelSetupNeeded, setModelSetupNeeded] = useState(false)
   const [refinementMode, setRefinementMode] = useState(readRefinementMode)
   const [recordingShortcut, setRecordingShortcut] = useState('')
   const [closeOptionsOpen, setCloseOptionsOpen] = useState(false)
@@ -134,19 +138,28 @@ function App() {
   }, [closeOptionsOpen])
 
   useEffect(() => {
+    if (!onboardingDone) return
     let cancelled = false
     const model = currentNativeAsrModel()
     syncSelectedNativeAsrModel(model)
-      .then(() => preloadNativeAsrModel(model))
+      .then(async () => {
+        await syncRefinementSettings()
+        const result = await window.voicerefine?.checkRecordingModels?.()
+        if (result?.missing.length) { setModelSetupNeeded(true); return }
+        return preloadNativeAsrModel(model)
+      })
       .catch(err => {
         if (!cancelled) console.warn('[asr] default model preload failed', err)
       })
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [onboardingDone])
+
+  useEffect(() => window.voicerefine?.onModelsRequired?.(() => setModelSetupNeeded(true)), [])
 
   useEffect(() => {
+    if (!onboardingDone) return
     void syncRefinementSettings()
     const warmupTimer = setTimeout(warmSelectedRefinementProvider, 1500)
     return () => clearTimeout(warmupTimer)
@@ -304,6 +317,12 @@ function App() {
               <RecordButton
                 variant="bar"
                 onAudioReady={handleAudioReady}
+                beforeStart={async () => {
+                  await syncRefinementSettings()
+                  const result = await window.voicerefine?.checkRecordingModels?.()
+                  if (result?.missing.length) { setModelSetupNeeded(true); return false }
+                  return true
+                }}
                 onRecordingChange={setIsRecording}
                 isProcessing={isTranscribing}
                 busyLabel={busyLabel}
@@ -341,6 +360,9 @@ function App() {
       )}
 
       <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} onSaved={handleSettingsSaved} />
+      {onboardingDone && modelSetupNeeded && <div className="fixed inset-0 z-50 ic-paper-bg ic-no-drag flex items-center justify-center p-8">
+        <div className="w-full max-w-xl max-h-[85vh] overflow-y-auto"><h1 className="ic-h1 mb-4">Set up your local models</h1><ModelManager setup needsGemma={readProvider() === 'builtin' && readRefinementMode() === 'transform'} onComplete={() => setModelSetupNeeded(false)} /></div>
+      </div>}
       {!onboardingDone && (
         <Onboarding onComplete={() => {
           setOnboardingDone(true)
