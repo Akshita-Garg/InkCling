@@ -1,8 +1,18 @@
-# Original installer restored — 12 October 2026
+# Full-screen recording bubble update — 12 October 2026
 
-The original 25 September 1.0.0 installers are restored at the standard download links. The full-screen bubble change is withdrawn while its downloaded launch path is investigated. Model assets are unchanged. Withdrawn test builds are labelled DO-NOT-INSTALL.
+This update keeps version 1.0.0 and the existing download links. The recording bubble uses a non-activating panel and appears on the display nearest the pointer, including above full-screen apps.
 
-Source for the restored binary: [d9b5dbf](https://github.com/Akshita-Garg/InkCling/tree/d9b5dbf9879b6e495d55862b16fdb48fab1d00ae).
+Verified on the test Mac: full-screen bubble visibility and automatic paste; the downloaded build launches after macOS Open Anyway approval completes. Automated tests: 137 passing, plus a separate-process fullscreen focus and overlay IPC check. Other macOS versions remain unverified.
+
+## Updating from an earlier beta
+Quit InkCling before replacing the app in Applications. Your models and history are stored separately and are reused.
+
+Because this beta uses ad hoc signing, an update can invalidate an earlier Accessibility grant even when the switch remains on. If transcription works but automatic paste does not:
+1. Quit InkCling.
+2. In System Settings > Privacy & Security > Accessibility, remove InkCling from the list, then add the updated app from Applications and enable it.
+3. Reopen InkCling and test in a text field.
+
+If macOS retains the stale entry, an optional targeted reset is `tccutil reset Accessibility com.inkcling.desktop`. This revokes only InkCling's Accessibility approval; then add and enable the updated app again. It does not grant access automatically.
 
 # InkCling 1.0.0 public beta
 
@@ -24,7 +34,7 @@ Internet is needed for initial model downloads; transcription and local refineme
 ## Compatibility and first launch
 Requires Apple Silicon (M1 or later). Built for macOS 14 or later; independent macOS 14/15 testing remains pending. Intel Macs are not supported.
 
-**This free beta is not Developer ID signed or notarized by Apple.** If blocked, open System Settings > Privacy & Security > Open Anyway for InkCling and authenticate with your Mac login password or Touch ID. See [Apple’s instructions](https://support.apple.com/en-gb/102445). A Mac account without a login password can fail to complete this approval.
+**This free beta is not Developer ID signed or notarized by Apple.** If blocked, open System Settings > Privacy & Security > Open Anyway for InkCling and complete the confirmation and Mac password or Touch ID prompt. Keep the app in place while approval completes; if its first launch was interrupted, reopen it afterward. See [Apple’s instructions](https://support.apple.com/en-gb/102445).
 
 ## Included features and limits
 - Clean: cleanup without a language model. Smart Refine: one local refinement pass.
@@ -37,3 +47,6 @@ Requires Apple Silicon (M1 or later). Built for macOS 14 or later; independent m
 Read the [privacy notice](https://akshita-garg.github.io/InkCling/privacy.html) and [terms](https://akshita-garg.github.io/InkCling/terms.html). SHA256SUMS.txt lists installer and model checksums.
 
 Report bugs in Issues with your macOS version, Mac chip, and reproduction steps. Do not post private dictations or API keys.
+
+## Source for this build
+The binary was built from [3d842e3](https://github.com/Akshita-Garg/InkCling/tree/3d842e34121369c6136c768f335731262bc6fe92). The verified bubble source is restored on main. The original release tag is unchanged; its automatically generated source archive represents the older build. Files named `ARCHIVE-original-20260925-*` preserve the previous installers; use the standard InkCling filenames for this update.
