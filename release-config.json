@@ -2,6 +2,6 @@
   "minimumMacOS": "14.0",
   "architecture": "arm64",
   "bundleId": "com.inkcling.desktop",
-  "releaseTag": "inkcling-v1.0.0",
+  "releaseTag": "inkcling-v1.0.1",
   "repository": "Akshita-Garg/InkCling"
 }
