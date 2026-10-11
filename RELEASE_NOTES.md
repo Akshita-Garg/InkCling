@@ -1,4 +1,6 @@
-# InkCling 1.0.1 public beta
+# InkCling 1.0.0 public beta — refreshed 12 October 2026
+
+The installers on the original release now include the full-screen bubble fix. Download the standard filenames below. Files named `before-bubble-fix` are archived original installers, retained with their historical download counts. New installers have separate download counters. Model files are unchanged.
 
 ## Full-screen recording bubble fix
 - The recording/transcribing bubble can now appear over full-screen apps using a nonactivating macOS panel.
@@ -7,9 +9,9 @@
 
 The full-screen visibility fix was confirmed by the app's user on their Mac. This release does not claim to resolve all automatic-paste issues.
 
-## Update from 1.0.0
+## Refresh an existing installation
 1. Quit InkCling completely with Command + Q.
-2. Download **InkCling-1.0.1-arm64.dmg**, open it, and drag InkCling into Applications, choosing Replace. The app ZIP is an alternative; you do not need both.
+2. Download **InkCling-1.0.0-arm64.dmg**, open it, and drag InkCling into Applications, choosing Replace. The app ZIP is an alternative; you do not need both.
 3. Launch InkCling from Applications. Existing models, settings, and dictation history remain outside the app bundle; do not delete its Application Support data to update.
 4. Check your recording shortcut in a text field, including with the destination app in full screen.
 
@@ -28,4 +30,4 @@ Requires Apple Silicon (M1 or later). Built for macOS 14 or later; independent m
 
 Transcription and local refinement work offline after model setup. Optional cloud refinement sends text to the provider you configure. Review important text: models can make mistakes or change meaning. No app analytics or account is required. Packaged releases redact transcript fields and do not save raw recordings by default.
 
-Read the [privacy notice](https://akshita-garg.github.io/InkCling/privacy.html) and [terms](https://akshita-garg.github.io/InkCling/terms.html). SHA256SUMS.txt lists the installer checksums. The release tag identifies the matching source code.
+Read the [privacy notice](https://akshita-garg.github.io/InkCling/privacy.html) and [terms](https://akshita-garg.github.io/InkCling/terms.html). SHA256SUMS.txt lists the installer checksums. The original release tag is retained for historical reference; refreshed installer source is on the main branch. The release page links the exact refresh source commit.
