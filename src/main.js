@@ -248,7 +248,7 @@ const createWindow = () => {
 function positionOverlayWindow() {
   if (!overlayWindow) return;
 
-  const { workArea } = screen.getPrimaryDisplay();
+  const { workArea } = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
   const bounds = overlayWindow.getBounds();
   const x = Math.round(workArea.x + (workArea.width - bounds.width) / 2);
   const y = Math.round(workArea.y + workArea.height - bounds.height - OVERLAY_BOTTOM_OFFSET);
@@ -259,11 +259,12 @@ function showOverlayWindow() {
   if (!overlayWindow) return;
 
   positionOverlayWindow();
+  // One level above screen-saver avoids ties with other floating overlays.
   // Re-asserted on every show: another app going full screen, or macOS
   // reordering levels, otherwise leaves the bubble buried under other windows.
   // (moveTop() is deliberately not called here: it pulls focus to InkCling and
   // takes the text cursor out of the app you were typing in.)
-  overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+  overlayWindow.setAlwaysOnTop(true, 'screen-saver', 1);
   overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
   overlayWindow.showInactive();
   // Also claimed via the window's 'show' event; this covers showInactive in
@@ -283,10 +284,11 @@ const createOverlayWindow = () => {
     resizable: false,
     movable: false,
     show: false,
-    // Not a macOS 'panel': a panel sits at the floating window level, where
-    // setAlwaysOnTop('screen-saver') cannot raise it, and other apps' windows
-    // cover the bubble. focusable:false plus showInactive keeps the app you
-    // were typing in active, and the paste re-activates that app anyway.
+    // A non-activating panel can join another app's native full-screen Space.
+    // A normal window can stay on the desktop even with alwaysOnTop enabled.
+    // Keep typing focus in the destination app while the panel is visible.
+    type: 'panel',
+    fullscreenable: false,
     focusable: false,
     hasShadow: false,
     backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -315,7 +317,7 @@ const createOverlayWindow = () => {
     });
   });
 
-  overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+  overlayWindow.setAlwaysOnTop(true, 'screen-saver', 1);
   overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
   overlayWindow.setIgnoreMouseEvents(true);
   // Esc cancels a dictation, but a global shortcut takes the key away from
