@@ -265,7 +265,12 @@ function showOverlayWindow() {
   // (moveTop() is deliberately not called here: it pulls focus to InkCling and
   // takes the text cursor out of the app you were typing in.)
   overlayWindow.setAlwaysOnTop(true, 'screen-saver', 1);
-  overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  // The non-activating panel supports full-screen Spaces without hiding the
+  // entire application's Dock icon (Electron's default process transform).
+  overlayWindow.setVisibleOnAllWorkspaces(true, {
+    visibleOnFullScreen: true,
+    skipTransformProcessType: true,
+  });
   overlayWindow.showInactive();
   // Also claimed via the window's 'show' event; this covers showInactive in
   // case that event isn't emitted. claimCancelShortcut is idempotent.
@@ -318,7 +323,12 @@ const createOverlayWindow = () => {
   });
 
   overlayWindow.setAlwaysOnTop(true, 'screen-saver', 1);
-  overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  // The non-activating panel supports full-screen Spaces without hiding the
+  // entire application's Dock icon (Electron's default process transform).
+  overlayWindow.setVisibleOnAllWorkspaces(true, {
+    visibleOnFullScreen: true,
+    skipTransformProcessType: true,
+  });
   overlayWindow.setIgnoreMouseEvents(true);
   // Esc cancels a dictation, but a global shortcut takes the key away from
   // every other app. So claim Esc only while the bubble is on screen; the
